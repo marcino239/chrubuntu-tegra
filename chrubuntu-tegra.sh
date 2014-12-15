@@ -69,25 +69,25 @@ else
     done
     # We've got our size in GB for ROOT-C so do the math...
 
-    #calculate sector size for rootc
+    # Calculate sector size for rootc
     rootc_size=$(($ubuntu_size*1024*1024*2))
 
-    #kernc is always 16mb
+    # kernc is always 16mb
     kernc_size=32768
 
-    #new stateful size with rootc and kernc subtracted from original
+    # New stateful size with rootc and kernc subtracted from original
     stateful_size=$(($state_size - $rootc_size - $kernc_size))
 
-    #start stateful at the same spot it currently starts at
+    # Start stateful at the same spot it currently starts at
     stateful_start="`cgpt show -i 1 -n -b -q ${target_disk}`"
 
-    #start kernc at stateful start plus stateful size
+    # Start kernc at stateful start plus stateful size
     kernc_start=$(($stateful_start + $stateful_size))
 
-    #start rootc at kernc start plus kernc size
+    # Start rootc at kernc start plus kernc size
     rootc_start=$(($kernc_start + $kernc_size))
 
-    #Do the real work
+    # Do the real work
 
     echo -e "\n\nModifying partition table to make room for Ubuntu."
     echo -e "Your Chromebook will reboot, wipe your data and then"
@@ -156,7 +156,8 @@ echo -e "\nChrome device model is: $hwid\n"
 
 echo -e "Installing Ubuntu ${ubuntu_version} with metapackage ${ubuntu_metapackage}\n"
 
-echo -e "Kernel Arch is: $chromebook_arch  Installing Ubuntu Arch: $ubuntu_arch\n"
+echo -e "Kernel Arch is: $chromebook_arch \n"
+echo -e "Installing Ubuntu Arch: $ubuntu_arch\n"
 
 read -p "Press [Enter] to continue..."
 
