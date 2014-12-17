@@ -5,13 +5,13 @@ set -e
 fw_type="`crossystem mainfw_type`"
 if [ ! "$fw_type" = "developer" ]
   then
-    echo -e "\nYou're Chromebook is not running a developer BIOS!"
+    echo -e "\nYour Chromebook is not running a developer BIOS!"
     echo -e "You need to run:"
     echo -e ""
     echo -e "sudo chromeos-firmwareupdate --mode=todev"
     echo -e ""
     echo -e "and then re-run this script."
-    exit 
+    exit
 fi
 
 powerd_status="`initctl status powerd`"
@@ -33,7 +33,7 @@ if [ "$3" != "" ]; then
 
   ext_size="`blockdev --getsz ${target_disk}`"
   arootfs_size=$((ext_size - 65600 - 33 - 4*1024*1024*1024/512))
-  cgpt create ${target_disk} 
+  cgpt create ${target_disk}
   cgpt add -i 6 -b 64 -s 32768 -S 1 -P 5 -l KERN-A -t "kernel" ${target_disk}
   cgpt add -i 7 -b 65600 -s $aroot_size -l ROOT-A -t "rootfs" ${target_disk}
   sync
@@ -69,27 +69,27 @@ else
     done
     # We've got our size in GB for ROOT-C so do the math...
 
-    #calculate sector size for rootc
+    # Calculate sector size for rootc
     rootc_size=$(($ubuntu_size*1024*1024*2))
 
-    #kernc is always 16mb
+    # kernc is always 16mb
     kernc_size=32768
 
-    #new stateful size with rootc and kernc subtracted from original
+    # New stateful size with rootc and kernc subtracted from original
     stateful_size=$(($state_size - $rootc_size - $kernc_size))
 
-    #start stateful at the same spot it currently starts at
+    # Start stateful at the same spot it currently starts at
     stateful_start="`cgpt show -i 1 -n -b -q ${target_disk}`"
 
-    #start kernc at stateful start plus stateful size
+    # Start kernc at stateful start plus stateful size
     kernc_start=$(($stateful_start + $stateful_size))
 
-    #start rootc at kernc start plus kernc size
+    # Start rootc at kernc start plus kernc size
     rootc_start=$(($kernc_start + $kernc_size))
 
-    #Do the real work
+    # Do the real work
 
-    echo -e "\n\nModifying partition table to make room for Ubuntu." 
+    echo -e "\n\nModifying partition table to make room for Ubuntu."
     echo -e "Your Chromebook will reboot, wipe your data and then"
     echo -e "you should re-run this script..."
     umount -f /mnt/stateful_partition
@@ -156,7 +156,8 @@ echo -e "\nChrome device model is: $hwid\n"
 
 echo -e "Installing Ubuntu ${ubuntu_version} with metapackage ${ubuntu_metapackage}\n"
 
-echo -e "Kernel Arch is: $chromebook_arch  Installing Ubuntu Arch: $ubuntu_arch\n"
+echo -e "Kernel Arch is: $chromebook_arch \n"
+echo -e "Installing Ubuntu Arch: $ubuntu_arch\n"
 
 read -p "Press [Enter] to continue..."
 
@@ -181,7 +182,7 @@ echo "Target Kernel Partition: $target_kern  Target Root FS: ${target_rootfs}"
 if mount|grep ${target_rootfs}
 then
   echo "Refusing to continue since ${target_rootfs} is formatted and mounted. Try rebooting"
-  exit 
+  exit
 fi
 
 mkfs.ext4 ${target_rootfs}
@@ -213,7 +214,7 @@ else
 fi
 
 chmod a+rx /tmp/urfs/usr/bin/cgpt
-if [ ! -d /tmp/urfs/run/resolvconf/ ] 
+if [ ! -d /tmp/urfs/run/resolvconf/ ]
 then
   mkdir /tmp/urfs/run/resolvconf/
 fi
@@ -254,7 +255,7 @@ apt-get -y install $add_apt_repository_package
 add-apt-repository main
 add-apt-repository universe
 add-apt-repository restricted
-add-apt-repository multiverse 
+add-apt-repository multiverse
 apt-get update
 apt-get -y install $ubuntu_metapackage
 $cr_install
@@ -289,11 +290,11 @@ cp -ar /lib/firmware/* /tmp/urfs/lib/firmware/
 cp /opt/google/chrome/pepper/libpepflashplayer.so /tmp/urfs/usr/lib/chromium-browser
 
 # tell chromium-browser where to find flash plugin
-echo -e 'CHROMIUM_FLAGS="${CHROMIUM_FLAGS} --ppapi-flash-path=/usr/lib/chromium-browser/libpepflashplayer.so"' >> /tmp/urfs/etc/chromium-browser/default 
+echo -e 'CHROMIUM_FLAGS="${CHROMIUM_FLAGS} --ppapi-flash-path=/usr/lib/chromium-browser/libpepflashplayer.so"' >> /tmp/urfs/etc/chromium-browser/default
 
 # flash plugin requires a new version of libstdc++6 from test repository
 cat > /tmp/urfs/install-flash.sh <<EOF
-add-apt-repository -y ppa:ubuntu-toolchain-r/test 
+add-apt-repository -y ppa:ubuntu-toolchain-r/test
 apt-get update
 apt-get install -y libstdc++6
 EOF
