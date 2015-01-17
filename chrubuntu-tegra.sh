@@ -32,13 +32,14 @@ if [ "$3" != "" ]; then
   read -p "Press [Enter] to install ChrUbuntu on ${target_disk} or CTRL+C to quit"
 
   ext_size="`blockdev --getsz ${target_disk}`"
-  arootfs_size=$((ext_size - 65600 - 33 - 4*1024*1024*1024/512))
+  aroot_size=$((ext_size - 65600 - 33 - 4*1024*1024*1024/512))
   cgpt create ${target_disk}
   cgpt add -i 6 -b 64 -s 32768 -S 1 -P 5 -l KERN-A -t "kernel" ${target_disk}
   cgpt add -i 7 -b 65600 -s $aroot_size -l ROOT-A -t "rootfs" ${target_disk}
   sync
   blockdev --rereadpt ${target_disk}
-  partprobe ${target_disk}
+  # no longer in latest chromeos
+  #partprobe ${target_disk}
   crossystem dev_boot_usb=1
 else
   target_disk="`rootdev -d -s`"
