@@ -39,11 +39,7 @@ if [ "$3" != "" ]; then
   # this script on your chromebook.
   #parted --script ${target_disk} "mktable gpt"
   cgpt create ${target_disk}
-  # 32 GB disk works above but not 4 GB
-  # uncomment for 4 GB disk and comment above
-  #  cgpt show /dev/mmcblk1 -> start of Sec GPT table
-  #     aroot_size = start_value - 40960
-  #aroot_size="7802847"
+  # 32 and 16 GB disks work above but not 4 GB
   cgpt add -i 6 -b 64 -s 32768 -S 1 -P 5 -l KERN-A -t "kernel" ${target_disk}
   cgpt add -i 7 -b 65600 -s $aroot_size -l ROOT-A -t "rootfs" ${target_disk}
   sync
