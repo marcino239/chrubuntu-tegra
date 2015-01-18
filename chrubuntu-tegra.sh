@@ -33,6 +33,11 @@ if [ "$3" != "" ]; then
 
   ext_size="`blockdev --getsz ${target_disk}`"
   aroot_size=$((ext_size - 65600 - 33 - 4*1024*1024*1024/512))
+  # Unfortunately parted and partprobe are no longer in the latest chromeos.
+  # You must run the parted command below on your desktop Linux machine, where
+  # ${target_disk} is your SDCard device, eg, /dev/sdb, *before* you run
+  # this script on your chromebook.
+  #parted --script ${target_disk} "mktable gpt"
   cgpt create ${target_disk}
   # 32 GB disk works above but not 4 GB
   # uncomment for 4 GB disk and comment above
@@ -254,6 +259,7 @@ then
 fi
 
 echo -e "apt-get -y update
+touch /etc/init.d/whoopsie
 apt-get -y dist-upgrade
 apt-get -y install ubuntu-minimal
 apt-get -y install wget
