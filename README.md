@@ -10,12 +10,12 @@ Note: if your chromebook has had time to update itself, you probably won't have 
 
 What works:
 
-                    "flavor"      "version"     "device"
-                    default       latest        /dev/mmcblk1
+                    "flavor"             "version"     "device"
+                    default              latest        /dev/mmcblk1
 
 What doesn't work:
 
-            ubuntu-standard       latest        -
+                    ubuntu-standard      latest        -
 
 Since the script specifically pulls in the Nvidia graphics packages for X11 and OpenGL, the ubuntu-standard flavor (which should be console only) dorks up due to missing X paths.  If you need console only, you can do Gentoo or the manual debootstrap method instead.
 
@@ -25,8 +25,9 @@ To install xubuntu to SDCard:
 
 2. On another Linux machine, install parted and insert your SDCard, then run the following commands, where target_disk is either /dev/sdX or /dev/mmcblkX:
 
-  $ export target_disk="/dev/mmcblk1"
-  $ sudo parted --script ${target_disk} "mktable gpt"
+
+                    $ export target_disk="/dev/mmcblk1"
+                    $ sudo parted --script ${target_disk} "mktable gpt"
 
 3. Boot the chromebook, login, and insert the SDCard.  Open a terminal with Ctl-Alt-T and at the crosh prompt type "shell <enter>" without the quotes.
 
@@ -34,9 +35,10 @@ To install xubuntu to SDCard:
 
 5. Back in your terminal, type the following commands and follow the prompts:
 
-  $ cd /tmp
-  $ cp ~/Downloads/chrubuntu-tegra.sh .
-  $ sudo bash chrubuntu-tegra.sh default latest /dev/mmcblk1
+
+                    $ cd /tmp
+                    $ cp ~/Downloads/chrubuntu-tegra.sh .
+                    $ sudo bash chrubuntu-tegra.sh default latest /dev/mmcblk1
 
 Note: make sure you get the right device; the script can also repartition the internal SSD and install along-side ChromeOS and should do the right thing.  Just make sure it's what you want...
 
@@ -46,15 +48,15 @@ Post-install workarounds:
 
 First boot will most likely stop at a console prompt due to conflicting libglx.so plugins.  Also, the default wireless device shows up twice (as two different devices with the same MAC address) and NetworkManager will see both.  This will cause X to freeze if both get started (at least if the weird interface starts before mlan0).  The workaround I did was to modify NetworkManager.conf so it looks like this:
 
-[main]
-plugins=ifupdown,keyfile
-dns=dnsmasq
-
-[ifupdown]
-managed=false
-
-[keyfile]
-unmanaged-devices=interface-name:uap0
+                    [main]
+                    plugins=ifupdown,keyfile
+                    dns=dnsmasq
+                    
+                    [ifupdown]
+                    managed=false
+                    
+                    [keyfile]
+                    unmanaged-devices=interface-name:uap0
 
 It may also help to have a USB ethernet dongle handy, but you could also switch to wicd if NetworkManager is stubborn.
 
