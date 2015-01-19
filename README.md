@@ -31,7 +31,7 @@ To install xubuntu to SDCard:
 
 3. Boot the chromebook, login, and insert the SDCard.  Open a terminal with Ctl-Alt-T and at the crosh prompt type "shell" (without the quotes) and hit Enter.
 
-4. In another tab, browse to the raw script file on github [here](https://github.com/sarnold/chrubuntu-tegra/blob/master/chrubuntu-tegra.sh) and click Raw, then right-click on the page and select Save as...  Remove the ".txt" extension and click Save.
+4. In another tab, browse to the raw script file on github [here](https://github.com/VCTLabs/chrubuntu-tegra/blob/master/chrubuntu-tegra.sh) and click Raw, then right-click on the page and select Save as...  Remove the ".txt" extension and click Save.
 
 5. Back in your terminal, type the following commands and follow the prompts:
 
