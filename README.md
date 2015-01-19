@@ -58,8 +58,11 @@ First boot will most likely stop at a console prompt due to conflicting libglx.s
                     [keyfile]
                     unmanaged-devices=interface-name:uap0
 
-It may also help to have a USB ethernet dongle handy, but you could also switch to wicd if NetworkManager is stubborn.
+It may also help to have a USB ethernet dongle handy, but you could also switch to wicd if NetworkManager is stubborn. Now find the extra copy of libglx.so and move it out of the way:
+
+                    $ find /usr/lib -name libglx.so
+                    $ mv /usr/lib/xorg/modules/extensions/libglx.so /usr/lib/xorg/modules/extensions/libglx.so.orig
 
 Note: In the nm-applet GUI, the weird interface has no name, but you can see it with ifconfig.
 
-
+With the above changes and a reboot, you should be greeted by the xubuntu login.  As mentioned in the script output, login as user (password: user) and then change all your passwords, and a user for yourself, etc.  Lastly, you need to uninstall one of the screensaver packages (xscreensaver is pretty old) and install zram-config, which will give you a reasonable amount of (fast) RAM-based swap.  Even without the swapfile bug in util-linux I would still recommend zram (which is chock full'o'kernel magic ;)
