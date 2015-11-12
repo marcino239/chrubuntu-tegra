@@ -1,5 +1,11 @@
 set -e
 
+# example use:
+#   1. Prepare MMC card on a different computer as stock chrome os
+#      does not carry cgpt any more
+#   2. Then download this script to a /tmp folder and from there run: 
+#      sudo bash chrubuntu-tegra.sh default 14.04 /dev/mmcblk1
+
 # fw_type will always be developer for Mario.
 # Alex and ZGB need the developer BIOS installed though.
 fw_type="`crossystem mainfw_type`"
