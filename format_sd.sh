@@ -10,7 +10,7 @@ echo "WARNING! All data on this device will be wiped out! Continue at your own r
 echo ""
 read -p "Press [Enter] to continue or CTRL+C to quit"
 
-cgpt create /dev/mmcblk0
+cgpt create ${target_disk}
 
 echo "Creating kernel partition ..."
 cgpt add -i 6 -b 64 -s 32768 -S 1 -P 5 -l KERN-A -t "kernel" ${target_disk}
