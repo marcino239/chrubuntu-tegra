@@ -1,3 +1,5 @@
+#!/bin/bash
+#
 # Prepares an MMC card with the required partitions to install Chrubuntu.
 # These partitions are:
 # . boot kernel 
@@ -13,7 +15,7 @@
 target_disk=$1
 rootfs_size=$2
 
-echo "Got ${target_disk} as target drive"
+echo "Got ${target_disk} as target drive and ${rootfs_size} as rootfs size"
 echo ""
 echo "WARNING! All data on this device will be wiped out! Continue at your own risk!"
 echo ""
