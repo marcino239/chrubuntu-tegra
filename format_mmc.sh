@@ -1,11 +1,14 @@
-#
-# Formats an SD card with the required partitions to install Chrubuntu.
+# Prepares an MMC drive with the required partitions to install Chrubuntu.
 # These partitions are:
 # . boot kernel 
 # . rootfs (where Chrubuntu can be installed)
-# This script requires the cgpt package (avaliable in Debian base systems).
+# This script requires the cgpt package (avaliable in Debian based systems).
 #
-# Usage example: format_sh mmblpc1 60335007
+# Arguments:
+# 1. target disk
+# 2. rootfs partition size in 512 Kb blocks
+#
+# Usage example: sudo format_mmc.sh /dev/mmcblk1 60335007
 
 target_disk=$1
 rootfs_size=$2
