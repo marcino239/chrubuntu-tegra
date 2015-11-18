@@ -1,4 +1,4 @@
-# Prepares an MMC drive with the required partitions to install Chrubuntu.
+# Prepares an MMC card with the required partitions to install Chrubuntu.
 # These partitions are:
 # . boot kernel 
 # . rootfs (where Chrubuntu can be installed)
