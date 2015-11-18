@@ -1,8 +1,8 @@
 set -e
 
 # example use:
-#   1. Prepare MMC card on a different computer as stock chrome os
-#      does not carry cgpt any more
+#   1. Prepare MMC card on a different computer using the format_mmc
+#      script. Stock chrome os does not carry cgpt any more
 #   2. Then download this script to a /tmp folder and from there run: 
 #      sudo bash chrubuntu-tegra.sh default 14.04 /dev/mmcblk1
 
