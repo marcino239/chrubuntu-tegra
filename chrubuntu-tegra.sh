@@ -38,13 +38,20 @@ if [ "$3" != "" ]; then
   read -p "Press [Enter] to install ChrUbuntu on ${target_disk} or CTRL+C to quit"
 
   ext_size="`blockdev --getsz ${target_disk}`"
-  arootfs_size=$((ext_size - 65600 - 33 - 4*1024*1024*1024/512))
-#  cgpt create ${target_disk}
-#  cgpt add -i 6 -b 64 -s 32768 -S 1 -P 5 -l KERN-A -t "kernel" ${target_disk}
-#  cgpt add -i 7 -b 65600 -s $aroot_size -l ROOT-A -t "rootfs" ${target_disk}
+  aroot_size=$((ext_size - 65600 - 33 - 4*1024*1024*1024/512))
+  # Unfortunately parted and partprobe are no longer in the latest chromeos.
+  # You must run the parted command below on your desktop Linux machine, where
+  # ${target_disk} is your SDCard device, eg, /dev/sdb, *before* you run
+  # this script on your chromebook.
+  #parted --script ${target_disk} "mktable gpt"
+  cgpt create ${target_disk}
+  # 32 and 16 GB disks work above but not 4 GB
+  cgpt add -i 6 -b 64 -s 32768 -S 1 -P 5 -l KERN-A -t "kernel" ${target_disk}
+  cgpt add -i 7 -b 65600 -s $aroot_size -l ROOT-A -t "rootfs" ${target_disk}
   sync
   blockdev --rereadpt ${target_disk}
-#  partprobe ${target_disk}
+  # no longer in latest chromeos
+  #partprobe ${target_disk}
   crossystem dev_boot_usb=1
 else
   target_disk="`rootdev -d -s`"
@@ -254,6 +261,7 @@ then
 fi
 
 echo -e "apt-get -y update
+touch /etc/init.d/whoopsie
 apt-get -y dist-upgrade
 apt-get -y install ubuntu-minimal
 apt-get -y install wget
