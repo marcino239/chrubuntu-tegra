@@ -206,7 +206,7 @@ then
 fi
 mount -t ext4 ${target_rootfs} /tmp/urfs
 
-tar_file="http://cdimage.ubuntu.com/ubuntu-base/releases/$ubuntu_version/release/ubuntu-base-$ubuntu_version-core-$ubuntu_arch.tar.gz"
+tar_file="http://cdimage.ubuntu.com/ubuntu-base/releases/$ubuntu_version/release/ubuntu-base-$ubuntu_version-base-$ubuntu_arch.tar.gz"
 if [ $ubuntu_version = "dev" ]
 then
   ubuntu_animal=`wget --quiet -O - http://changelogs.ubuntu.com/meta-release-development | grep "^Dist: " | tail -1 | sed -r 's/^Dist: (.*)$/\1/'`
@@ -318,8 +318,68 @@ chroot /tmp/urfs /bin/bash -c /install-flash.sh
 rm /tmp/urfs/install-flash.sh
 
 
+# from https://chromium.googlesource.com/chromiumos/platform/xorg-conf/+/factory-4128.B/tegra.conf
+cat > /tmp/urfs/usr/share/X11/xorg.conf.d/tegra.conf << EOF
+Section "Module"
+    Load        "glx"
+EndSection
+Section "Device"
+    Identifier  "Tegra"
+    Driver      "nvidia"
+    Option      "ConstrainCursor" "false"
+    Option      "NoLogo" "true"
+# OverlayDepth is a 32-bit integer which is used to control overlay
+# stacking order.  The overlay with the lowest depth is in front of
+# all others.  This value has meaning only when multiple overlays are
+# present on a display. This value can range between 0 & 255 (both values
+# inclusive). The default being 255.
+#    Option      "OverlayDepth" "0"
+# OverlayCombineMode determines how the X overlay is combined with the
+# overlay behind it during scanout.  Available modes are: Opaque
+# (default), SourceAlphaBlend, and PremultSourceAlphaBlend.  This
+# value has meaning only when an external process has created a
+# display which is behind the X server.
+#    Option      "OverlayCombineMode" "PremultSourceAlphaBlend"
+# ARGBHWCursor controls whether the X driver uses an overlay to
+# display 32-bit "true-color" cursors, or whether such cursors are
+# emulated in software.  Valid values are "true" to enable hardware
+# cursors, and "false" (default) to disable them.
+    Option      "ARGBHWCursor" "true"
+# Set the maximum number of pixmap caches used by the X driver.
+# Valid values are 0 through 16 (default)
+# A value of 0 disables the use of the caches for pixmaps.
+# To use less memory, but still retain performance, the recommendation
+# is to use one pixmap heap, set a small size, and limit the size
+# of the surfaces that utilizes the pixmap cache.
+#    Option      "PixmapCacheMaxHeaps"  "1"
+# Set the size of each pixmap cache, in bytes.
+# Valid values are 64 KiB though 64 MiB. Up to
+# "PixmapCacheMaxHeaps" (see above) will be allocated
+# if necessary. The default value is 8 MiB.
+#    Option      "PixmapCacheSize"  "65536"
+# Set the maximum size for a surface that uses
+# the pixmap cache. If a surface exceeds this size
+# it will be allocated as a separate allocation, outside
+# the pixmap cache.
+# The default value is the same as "PixmapCacheSize"
+#    Option      "PixmapCacheMaxSurfaceSize"  "4096"
+# Use monitor section with identifier LVDS for output named LVDS-1
+#    Option      "monitor-LVDS-1" "LVDS"
+#    Option      "monitor-HDMI-1" "HDMI"
+EndSection
+Section "ServerFlags"
+    Option     "NoTrapSignals" "true"
+    Option     "DontZap" "false"
+    # Disable DPMS timeouts.
+    Option     "StandbyTime" "0"
+    Option     "SuspendTime" "0"
+    Option     "OffTime" "0"
+    # Disable screen saver timeout.
+    Option     "BlankTime" "0"
+EndSection
+EOF
+
 # BIG specific files here
-cp /etc/X11/xorg.conf.d/tegra.conf /tmp/urfs/usr/share/X11/xorg.conf.d/
 l4tdir=`mktemp -d`
 l4t=Tegra124_Linux_R21.1.0_armhf.tbz2
 wget -P ${l4tdir} http://developer.download.nvidia.com/mobile/tegra/l4t/r21.1.0/${l4t}
